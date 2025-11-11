@@ -292,3 +292,67 @@ Ultralytics cung cấp nhiều kích thước mô hình tùy theo nhu cầu:
 <img width="1768" height="911" alt="image" src="https://github.com/user-attachments/assets/ff919800-7069-423a-9a39-00898f72f438" />
 
 
+## 🧠 YOLO v7 Architecture (2022)
+
+YOLO v7 được giới thiệu năm **2022** bởi **Chien-Yao Wang và cộng sự** (nhóm nghiên cứu Vision).  
+Phiên bản này tập trung **tối ưu tốc độ và độ chính xác**, đồng thời **giảm tài nguyên tính toán** so với YOLOv5 và YOLOv6.
+
+---
+
+### ⚙️ Kiến trúc tổng quan
+
+YOLO v7 tiếp tục sử dụng triết lý **Backbone – Neck – Head**,  
+nhưng có những cải tiến nổi bật:
+
+#### 🧱 1. Backbone: E-ELAN
+- **Extended Efficient Layer Aggregation Network (E-ELAN)**.  
+- Giúp mạng **học được nhiều đặc trưng hơn** mà không tăng độ sâu hay tham số.  
+- Kết hợp các **Residual + Concatenation Blocks** để giữ thông tin chi tiết.
+
+#### 🪜 2. Neck: PAN + BiFPN
+- Sử dụng **Path Aggregation Network (PAN)** kết hợp **Bi-directional Feature Pyramid Network (BiFPN)**  
+- Cho phép **fusion đặc trưng multi-scale tốt hơn** → phát hiện vật thể nhỏ và trung bình mạnh mẽ.
+
+#### 🧩 3. Head: YOLO Detection Layer
+- Multi-scale detection giống YOLO v5: **3 tỉ lệ (13×13, 26×26, 52×52)**  
+- Objectness score + Class probabilities dùng **Sigmoid activation**  
+- Hỗ trợ **multi-label classification**  
+
+---
+
+### ⚡ Các điểm nổi bật của YOLO v7
+
+1. **Trainable bag-of-freebies (BoF)**: tăng độ chính xác mà không tăng inference cost.  
+2. **Trainable bag-of-specials (BoS)**: tối ưu backbone, head và các layer convolution.  
+3. **Nhẹ hơn và nhanh hơn YOLOv5/YOLOv6** nhưng **độ chính xác cao hơn**.  
+4. **Hỗ trợ các biến thể**: YOLOv7-tiny, YOLOv7-x, YOLOv7-w6… để cân bằng tốc độ và chính xác.
+
+---
+
+### 🧩 Ưu điểm
+
+✅ **Chính xác hơn YOLOv5** trên benchmark COCO.  
+✅ **Tốc độ inference nhanh**, vẫn suitable cho real-time.  
+✅ **Học đặc trưng hiệu quả** nhờ E-ELAN và BiFPN.  
+✅ **Hỗ trợ multi-label**, phát hiện vật thể nhỏ tốt.  
+
+---
+
+### ⚠️ Nhược điểm
+
+❌ **Phức tạp hơn YOLOv5** → cài đặt và huấn luyện khó hơn.  
+❌ **Yêu cầu GPU tốt** để huấn luyện và deploy hiệu quả.  
+❌ **Chưa phổ biến bằng YOLOv5**, ít tài liệu, community nhỏ hơn.
+
+---
+
+
+<img width="1513" height="869" alt="image" src="https://github.com/user-attachments/assets/8e5b4930-6857-48d0-8b67-894e3e43a88d" />
+
+
+
+### Thành Tựu và Ứng Dụng
+
+<img width="984" height="524" alt="image" src="https://github.com/user-attachments/assets/000f1757-de62-4696-9a85-45412b47c0cd" />
+
+
