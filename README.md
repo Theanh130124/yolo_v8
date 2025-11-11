@@ -198,3 +198,97 @@ Trong đó:
 
 <img width="1753" height="850" alt="image" src="https://github.com/user-attachments/assets/c551fc32-6e3c-4a3d-938e-b88ef74de0be" />
 
+
+
+## 🧠 YOLO v5 Architecture (2020)
+
+YOLO v5 được phát hành năm **2020** bởi **Ultralytics** (không phải nhóm gốc của Joseph Redmon).  
+Đây là phiên bản YOLO phổ biến nhất trên GitHub nhờ:
+- Dễ huấn luyện, dễ triển khai (Python + PyTorch)
+- Hiệu năng cao
+- Tương thích với nhiều thiết bị (GPU, CPU, Edge)
+
+---
+
+### ⚙️ Kiến trúc tổng quan
+
+YOLO v5 vẫn giữ triết lý “You Only Look Once”,  
+nhưng được **viết lại hoàn toàn bằng PyTorch**,  
+và cải tiến ở 3 phần chính: **Backbone – Neck – Head**.
+
+---
+
+#### 🧱 1. Backbone: CSPDarknet53
+- Dựa trên Darknet-53 của YOLOv3, nhưng thêm **Cross Stage Partial Connections (CSP)**  
+  → giúp giảm số lượng tham số mà vẫn giữ được độ chính xác.  
+- Sử dụng **Focus layer** để giảm kích thước ảnh đầu vào mà vẫn giữ thông tin quan trọng.  
+- Kết hợp **Conv + BatchNorm + SiLU (Swish)** activation cho hiệu năng cao.
+
+---
+
+#### 🪜 2. Neck: PANet (Path Aggregation Network)
+- Truyền đặc trưng từ nhiều tầng của backbone.  
+- Tăng khả năng nhận diện vật thể ở nhiều kích thước (multi-scale feature fusion).  
+- Sử dụng **FPN + PAN** giúp kết hợp đặc trưng từ thấp → cao và ngược lại.
+
+---
+
+#### 🧩 3. Head: YOLO Layer
+- Mỗi head dự đoán ở **3 tỉ lệ (scales)**:  
+  - 13×13 → vật thể lớn  
+  - 26×26 → vật thể trung bình  
+  - 52×52 → vật thể nhỏ  
+- Mỗi ô lưới (grid cell) dự đoán:
+  - (x, y, w, h)
+  - Objectness score
+  - Class probabilities  
+- Hàm kích hoạt: **sigmoid** (cho objectness và class score)
+
+---
+
+### 🧮 Công thức đầu ra
+
+\[
+\text{Output} = S \times S \times (3 \times (5 + C))
+\]
+Trong đó:
+- `S`: Kích thước grid (13, 26, 52)  
+- `3`: Số anchor boxes mỗi scale  
+- `5`: (x, y, w, h, objectness)  
+- `C`: Số lớp cần phát hiện
+
+---
+
+### ⚡ Các phiên bản của YOLOv5
+Ultralytics cung cấp nhiều kích thước mô hình tùy theo nhu cầu:
+| Phiên bản | Đặc điểm | Tốc độ (FPS) | Độ chính xác (mAP) |
+|------------|-----------|---------------|--------------------|
+| YOLOv5n (Nano) | Nhỏ gọn, dùng cho thiết bị edge | 🚀 Rất nhanh | Trung bình |
+| YOLOv5s (Small) | Cân bằng tốc độ và độ chính xác | Nhanh | Tốt |
+| YOLOv5m (Medium) | Trung bình | Trung bình | Cao |
+| YOLOv5l (Large) | Mạnh hơn | Trung bình | Rất cao |
+| YOLOv5x (X-Large) | Mô hình lớn nhất | Chậm hơn | 🔥 Chính xác nhất |
+
+---
+
+### ✅ Ưu điểm
+
+- **Hiệu năng cao, dễ dùng:** Huấn luyện bằng PyTorch chỉ với vài dòng lệnh.  
+- **Triển khai dễ dàng:** Hỗ trợ ONNX, TensorRT, CoreML, OpenVINO, TFLite.  
+- **Cấu trúc linh hoạt:** Tách rõ backbone – neck – head.  
+- **Phát hiện vật thể nhỏ tốt hơn** nhờ PANet.  
+- **Tốc độ nhanh, độ chính xác cao** hơn YOLOv3/YOLOv4.  
+
+---
+
+### ⚠️ Nhược điểm
+
+- **Không phải phiên bản chính thức** từ tác giả YOLO gốc.  
+- **Cần GPU để huấn luyện hiệu quả.**  
+- **Tài nguyên lớn hơn YOLOv3**, đặc biệt bản `l` và `x`.  
+
+---
+
+<img width="1768" height="911" alt="image" src="https://github.com/user-attachments/assets/ff919800-7069-423a-9a39-00898f72f438" />
+
+
