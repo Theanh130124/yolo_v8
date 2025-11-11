@@ -121,3 +121,80 @@ P(\text{class}_i) = P(\text{Object}) \times IOU_{\text{pred,true}} \times P(\tex
 ---
   
 <img width="1880" height="833" alt="image" src="https://github.com/user-attachments/assets/d5d7161c-1e58-4ac6-99b2-ee7c6e273f87" />
+
+## 🧠 YOLO v3 Architecture (2018)
+
+YOLO v3 được giới thiệu năm **2018** bởi **Joseph Redmon và Ali Farhadi**.  
+Đây là phiên bản cải tiến mạnh mẽ so với YOLO v1/v2,  
+tập trung nâng cao **độ chính xác**, đặc biệt với **vật thể nhỏ**,  
+nhưng vẫn giữ được **tốc độ cao** – phù hợp cho ứng dụng real-time.
+
+---
+
+### ⚙️ Kiến trúc tổng quan
+
+YOLO v3 sử dụng backbone **Darknet-53**, gồm:
+- **53 lớp Convolutional** (thay vì 24 lớp như YOLO v1)  
+- Không còn dùng **Fully Connected**, toàn bộ là CNN thuần túy.
+- Sử dụng **Residual Connections** (giống ResNet) để tránh mất mát thông tin khi mạng sâu hơn.
+- **Batch Normalization** và **Leaky ReLU** được dùng để ổn định quá trình học.
+
+Ảnh đầu vào được chia thành **lưới (grid)**, nhưng YOLO v3 dự đoán ở **3 cấp độ độ phân giải khác nhau**:
+1. **Scale 1:** 13×13 – phát hiện vật thể lớn  
+2. **Scale 2:** 26×26 – phát hiện vật thể trung bình  
+3. **Scale 3:** 52×52 – phát hiện vật thể nhỏ  
+
+Mỗi cell trong mỗi scale sẽ dự đoán:
+- **3 bounding boxes (anchor boxes)**  
+- Với mỗi box, mô hình xuất ra **(x, y, w, h, objectness score, class scores)**  
+
+---
+
+### 🎯 Objectness Score & Class Prediction
+
+- **Objectness Score**: cho biết mức độ tin cậy rằng bounding box chứa vật thể.  
+- **Class Prediction:** YOLO v3 thay softmax bằng **sigmoid activation**  
+  → cho phép mô hình dự đoán **đa lớp (multi-label)** (một vật thể có thể thuộc nhiều lớp).
+
+📘 **Công thức đầu ra tổng quát:**
+
+\[
+\text{Output} = S \times S \times (B \times (5 + C))
+\]
+
+Trong đó:
+- `S`: Kích thước grid (13, 26, 52)  
+- `B`: Số anchor boxes (3 mỗi scale)  
+- `5`: (x, y, w, h, objectness)  
+- `C`: Số lớp (classes)
+
+---
+
+### 🧩 Ưu điểm
+
+✅ **Phát hiện vật thể nhỏ tốt hơn:**  
+→ Nhờ cơ chế multi-scale (13×13, 26×26, 52×52).  
+
+✅ **Chính xác hơn YOLO v1/v2:**  
+→ Do backbone Darknet-53 mạnh mẽ và có residual connections.
+
+✅ **Không dùng fully connected:**  
+→ Giảm tham số, tốc độ nhanh, dễ huấn luyện.  
+
+✅ **Hỗ trợ multi-label classification:**  
+→ Một vật thể có thể thuộc nhiều lớp cùng lúc.
+
+---
+
+### ⚠️ Nhược điểm
+
+❌ **Kích thước mô hình lớn hơn**, tốc độ giảm nhẹ so với YOLO v2.  
+❌ **Không dùng FPN đầy đủ** (Feature Pyramid Network), nên với vật thể cực nhỏ vẫn chưa tối ưu.  
+❌ **Huấn luyện phức tạp hơn**, cần chọn anchor boxes phù hợp.
+
+---
+
+
+
+<img width="1753" height="850" alt="image" src="https://github.com/user-attachments/assets/c551fc32-6e3c-4a3d-938e-b88ef74de0be" />
+
