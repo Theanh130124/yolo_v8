@@ -1,4 +1,4 @@
-# yolo_v8
+# YOLO_v8
 Object detection model with yolo
 
 
@@ -348,6 +348,134 @@ nhưng có những cải tiến nổi bật:
 
 
 <img width="1513" height="869" alt="image" src="https://github.com/user-attachments/assets/8e5b4930-6857-48d0-8b67-894e3e43a88d" />
+
+
+## 🧠 YOLO v8 Architecture (2023)
+
+YOLO v8 được phát triển bởi **Ultralytics**, là phiên bản mới nhất tính đến nay.  
+Phiên bản này tập trung **tối ưu toàn diện**: tốc độ, độ chính xác, dễ triển khai, và tích hợp trực tiếp với **PyTorch + Ultralytics API**.
+
+---
+
+### ⚙️ Kiến trúc tổng quan
+
+YOLO v8 vẫn giữ triết lý **Backbone – Neck – Head**,  
+nhưng có nhiều cải tiến hiện đại so với YOLO v5/v7:
+
+#### 🧱 1. Backbone: CSP-Darknet / CSP-PAN
+- **Cross Stage Partial (CSP) connections** giúp giảm tham số mà vẫn giữ đặc trưng mạnh.  
+- Tích hợp **Focus Layer** để giảm kích thước ảnh đầu vào mà giữ thông tin.  
+- Sử dụng các **Conv + BN + SiLU** (Swish) activation để ổn định huấn luyện.
+
+#### 🪜 2. Neck: PAN + BiFPN
+- Truyền đặc trưng multi-scale từ backbone sang head.  
+- Kết hợp **Path Aggregation Network (PAN)** và **BiFPN** để tối ưu feature fusion.  
+- Giúp phát hiện vật thể **nhỏ, trung bình, lớn** hiệu quả.
+
+#### 🧩 3. Head: YOLO Detection Layer
+- Dự đoán ở **3 scale** (13×13, 26×26, 52×52).  
+- Mỗi bounding box xuất ra:
+  - (x, y, w, h)  
+  - Objectness score  
+  - Class probabilities (Sigmoid → hỗ trợ multi-label)  
+- Cải tiến: hỗ trợ **mask prediction**, **keypoint detection** (trong YOLOv8-seg/keypoint).
+
+---
+
+### ⚡ Các điểm nổi bật của YOLO v8
+
+1. **Được viết hoàn toàn bằng PyTorch** → dễ tích hợp với các pipeline ML khác.  
+2. **API thân thiện**: huấn luyện, inference, export chỉ với vài dòng lệnh.  
+3. **Multi-task support**: detection, segmentation, pose estimation trong cùng một framework.  
+4. **Tối ưu hóa tốc độ + độ chính xác**: tăng FPS trên GPU/CPU so với YOLOv5 và YOLOv7.  
+5. **Nhẹ hơn YOLOv7 trong các biến thể nano/small** → suitable cho edge devices.
+
+---
+
+### 🧩 Ưu điểm
+
+✅ **Nhanh, chính xác, dễ triển khai**.  
+✅ **Hỗ trợ nhiều nhiệm vụ**: detection, segmentation, keypoints.  
+✅ **Multi-scale & multi-label detection**.  
+✅ **Ultralytics API + PyTorch native** → dễ tích hợp vào project.  
+✅ **Các phiên bản nhẹ và mạnh**: nano, small, medium, large, xlarge.
+
+---
+
+### ⚠️ Nhược điểm
+
+❌ **Phiên bản mới, ít tài liệu hướng dẫn nâng cao** so với YOLOv5.  
+❌ **Cần GPU tốt** để huấn luyện nhanh, đặc biệt với các model large/xlarge.  
+❌ **Một số tính năng nâng cao (segmentation, pose) làm tăng độ phức tạp**.
+
+---
+
+## INSTALL
+<img width="1672" height="311" alt="image" src="https://github.com/user-attachments/assets/5d9141cf-1583-4f30-8606-77f37c889631" /> 
+
+## CLI 
+
+```
+# Huấn luyện YOLOv8 với dataset COCO hoặc custom
+yolo detect train model=yolov8n.pt data=coco.yaml epochs=100 imgsz=640
+
+
+
+# Trên ảnh đơn
+yolo detect predict model=yolov8n.pt source="image.jpg"
+
+# Trên thư mục ảnh
+yolo detect predict model=yolov8n.pt source="data/images/"
+
+# Trên video
+yolo detect predict model=yolov8n.pt source="video.mp4"
+
+
+```
+
+## PYTHON
+
+```
+from ultralytics import YOLO
+
+# Load pre-trained YOLOv8 model
+model = YOLO("yolov8n.pt")
+
+results = model.predict("image.jpg")
+
+# Hiển thị kết quả
+results.show()
+
+
+results = model.predict("video.mp4", stream=True)
+for result in results:
+    result.show()
+
+
+#Custom dataset
+
+model.train(
+    data="coco.yaml",   # file config dataset
+    epochs=100,
+    imgsz=640,
+    batch=16
+)
+
+#Save model
+
+# Lưu weights
+model.save("yolov8-custom.pt")
+
+# Export sang ONNX
+model.export(format="onnx")
+
+
+
+```
+
+
+## PRETRAIN MODELS 
+<img width="729" height="347" alt="image" src="https://github.com/user-attachments/assets/ba94f11f-c2f5-437a-bfa2-5899a615760b" />
 
 
 
