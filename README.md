@@ -484,3 +484,6 @@ model.export(format="onnx")
 <img width="984" height="524" alt="image" src="https://github.com/user-attachments/assets/000f1757-de62-4696-9a85-45412b47c0cd" />
 
 
+### Hands on :
+
+<img width="906" height="389" alt="image" src="https://github.com/user-attachments/assets/6267c01f-cc46-4e1c-94cf-2529902ff1a4" />
